@@ -1,7 +1,7 @@
 import 'package:my_wallet/transactions-page.dart';
 import 'package:my_wallet/custom_widgets/daily-widget.dart';
 import 'package:flutter/material.dart';
-import 'add-transaction-page.dart';
+import 'package:my_wallet/add-transaction-page.dart';
 import 'package:my_wallet/class/device.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_wallet/custom_widgets/monthly-widget.dart';
@@ -147,7 +147,7 @@ class _DashboardPageState extends State<DashboardPage> {
           size: 26,
         ),
         onPressed: () {
-          Navigator.push(context,
+          Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => AddTransaction()));
         },
         backgroundColor: Colors.orangeAccent,
@@ -198,7 +198,8 @@ class _DashboardPageState extends State<DashboardPage> {
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           TransactionsPage()));
-                            });
+                            }
+                          );
                       },
                     );
                   }
@@ -242,12 +243,21 @@ class _DashboardPageState extends State<DashboardPage> {
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2),
                       itemBuilder: (BuildContext context, int index) {
-                        return WeeklyWidget(
-                          date: snapshot.data[index].date,
-                          month: snapshot.data[index].month,
-                          year: snapshot.data[index].year,
-                          income: snapshot.data[index].income,
-                          expense: snapshot.data[index].expense,
+                        return InkWell(
+                          child: WeeklyWidget(
+                            date: snapshot.data[index].date,
+                            month: snapshot.data[index].month,
+                            year: snapshot.data[index].year,
+                            income: snapshot.data[index].income,
+                            expense: snapshot.data[index].expense,
+                          ),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          TransactionsPage()));
+                            }
                         );
                       },
                     );
@@ -292,12 +302,21 @@ class _DashboardPageState extends State<DashboardPage> {
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2),
                       itemBuilder: (BuildContext context, int index) {
-                        return MonthlyWidget(
-                          date: snapshot.data[index].date,
-                          month: snapshot.data[index].month,
-                          year: snapshot.data[index].year,
-                          income: snapshot.data[index].income,
-                          expense: snapshot.data[index].expense,
+                        return InkWell(
+                          child: MonthlyWidget(
+                            date: snapshot.data[index].date,
+                            month: snapshot.data[index].month,
+                            year: snapshot.data[index].year,
+                            income: snapshot.data[index].income,
+                            expense: snapshot.data[index].expense,
+                          ),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          TransactionsPage()));
+                            }
                         );
                       },
                     );
@@ -341,12 +360,21 @@ class _DashboardPageState extends State<DashboardPage> {
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2),
                       itemBuilder: (BuildContext context, int index) {
-                        return YearlyWidget(
-                          date: snapshot.data[index].date,
-                          month: snapshot.data[index].month,
-                          year: snapshot.data[index].year,
-                          income: snapshot.data[index].income,
-                          expense: snapshot.data[index].expense,
+                        return InkWell(
+                          child: YearlyWidget(
+                            date: snapshot.data[index].date,
+                            month: snapshot.data[index].month,
+                            year: snapshot.data[index].year,
+                            income: snapshot.data[index].income,
+                            expense: snapshot.data[index].expense,
+                          ),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          TransactionsPage()));
+                            }
                         );
                       },
                     );
