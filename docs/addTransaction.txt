@@ -1,0 +1,360 @@
+import 'package:flutter/material.dart';
+import 'package:date_format/date_format.dart';
+import 'package:intl/intl.dart';
+
+void main() {
+  runApp(Demo());
+}
+
+class Demo extends StatelessWidget {
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: myDemo(),
+    );
+  }
+}
+
+class myDemo extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() => MD();
+}
+
+enum TransType { expense, income}
+
+class MD extends State<myDemo>{
+  var _formKey = GlobalKey<FormState>();
+  TransType suit = TransType.expense;
+
+  var category = ['Select','Food','Social Life','Transportation'];
+  var cat_cur = 'Select';
+
+  var currency = ['PKR','USD','EURO'];
+  var curr_cur = 'PKR';
+
+  var amount;
+  var note;
+
+  TextEditingController amountControl = TextEditingController();
+  TextEditingController catControl = TextEditingController();
+
+  DateTime selectedDate = DateTime.now();
+  String f_date = new DateFormat.yMMMd().format(DateTime.now());
+
+  @override
+  Widget build(BuildContext context) {
+    return (
+    new Scaffold(
+      appBar: AppBar(
+        title: Text("Transaction"),
+        backgroundColor: Colors.orange,
+      ),
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: EdgeInsets.all(10.0),
+          child: ListView(
+              children: <Widget> [
+                 Container(
+                   padding: EdgeInsets.all(10.0),
+                   margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                   child: Row(
+                     children: <Widget>[
+                       Container(
+                         margin: EdgeInsets.fromLTRB(0, 0, 100, 0),
+                         child: Text("Date"),
+                       ),
+                       
+                       InkWell(
+                         onTap: (){
+                           showDatePicker(
+                              context: context, 
+                              initialDate: selectedDate, 
+                              firstDate: DateTime(2020), 
+                              lastDate: DateTime(2120),
+                              ).then((date) {
+                                setState(() {
+                                    selectedDate = date;
+                                    f_date = new DateFormat.yMMMd().format(selectedDate);
+                                }
+                                );
+                              }
+                              );
+                          },
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.rectangle,
+                            border: Border.all(
+                              width: 1.0,
+                              color: Colors.orange
+                            )
+                          ),
+                          height: 50.0,
+                          width: 150.0,
+                          child: Text("$f_date", textAlign: TextAlign.center, 
+                          )
+                        ),
+                      )
+                         
+                     ],
+                   )
+                 ),
+
+                 Container(
+                   padding: EdgeInsets.all(10.0),
+                   margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                   child: Row(
+                     children: <Widget> [
+                       Container(
+                         margin: EdgeInsets.fromLTRB(0, 0, 60, 0),
+                         child: Text("Type"),
+                       ),
+                       Radio(
+                         value: TransType.expense, 
+                         groupValue: suit, 
+                         onChanged: (TransType value){
+                           setState(() {
+                             suit = value;
+                           });
+                         }
+                         ),
+                         Container(
+                         margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                         child: Text("Expense"),
+                       ),
+                         Radio(
+                         value: TransType.income, 
+                         groupValue: suit, 
+                         onChanged: (TransType value){
+                           setState(() {
+                             suit = value;
+                           });
+                         }
+                         ),
+                         Text(
+                           "Income"
+                         ),
+                     ]
+                   ),
+                 ),
+
+                 Container(
+                   padding: EdgeInsets.all(10.0),
+                   margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                   child: Row(
+                     children: <Widget> [
+                       Container(
+                         margin: EdgeInsets.fromLTRB(0, 0, 80, 0),
+                         child: Text("*Category"),
+                       ),
+
+                       Expanded(
+                         child: DropdownButtonFormField<String>(
+                              items: category.map((String value) {
+                                return DropdownMenuItem(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }
+                              ).toList(),
+                              onChanged: (String newvalue){
+                                setState(() {
+                                  this.cat_cur = newvalue;
+                                });
+                              },
+                              value: cat_cur,
+                              validator: (String value){
+                                if(value == "Select")
+                                {
+                                  return "Please select a category";
+                                }
+                              },
+                            )
+                       ),
+                     ]
+                   ),
+                 ),
+
+                 Container(
+                   padding: EdgeInsets.all(10.0),
+                   margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                   child: Row(
+                     children: <Widget> [
+                       Container(
+                         margin: EdgeInsets.fromLTRB(0, 0, 80, 0),
+                         child: Text("Currency"),
+                       ),
+                       Expanded(
+                         child: DropdownButtonFormField<String>(
+                              items: currency.map((String value) {
+                                return DropdownMenuItem(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }
+                              ).toList(),
+                              onChanged: (String newvalue){
+                                setState(() {
+                                  this.curr_cur = newvalue;
+                                });
+                              },
+                              value: curr_cur,
+                            )
+                       ),
+ 
+                     ]
+                   ),
+                 ),
+
+                 Container(
+                   padding: EdgeInsets.all(10.0),
+                   margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                   
+                   child: Column(
+                   children: <Widget>[
+                     Align(
+                       alignment: Alignment.centerLeft,
+                       child: Text(
+                         "*Amount"
+                       ),
+                     ),
+                   ],
+                 ),
+                 ),
+
+                 Container(
+                   padding: EdgeInsets.all(10.0),
+                   margin: EdgeInsets.fromLTRB(10,5,0,0),
+                   decoration: BoxDecoration(
+                     shape: BoxShape.rectangle,
+                     border: Border.all(
+                      color: Colors.orange,
+                      width: 1.0
+                     ) 
+                     ),
+                   child: new TextFormField(
+                     keyboardType: TextInputType.number,
+                     decoration: InputDecoration(
+                       enabledBorder: InputBorder.none,
+                       errorBorder: InputBorder.none,
+                       disabledBorder: InputBorder.none,
+                       hintText: "Enter Amount" 
+                       ),
+                       onChanged: (String amt){
+                         amount = int.parse(amt);
+                         debugPrint("Amount : $amount");
+                       },
+                       controller:  amountControl,
+                       validator: (String value){
+                         if(value.isEmpty)
+                         {
+                           return "Please Enter Amount";
+                         }
+                       },
+                   ),
+                 ),
+
+                 Container(
+                   padding: EdgeInsets.all(10.0),
+                   margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
+                   
+                   child: Column(
+                   children: <Widget>[
+                     Align(
+                       alignment: Alignment.centerLeft,
+                       child: Text(
+                         "Note"
+                       ),
+                     ),
+                   ],
+                 ),
+                 ),
+
+                 Container(
+                   padding: EdgeInsets.all(10.0),
+                   margin: EdgeInsets.fromLTRB(10,5,0,0),
+                   decoration: BoxDecoration(
+                     shape: BoxShape.rectangle,
+                     border: Border.all(
+                      color: Colors.orange,
+                      width: 1.0
+                     ) 
+                     ),
+                   child: new TextFormField(
+                     decoration: InputDecoration(
+                       focusedBorder: InputBorder.none,
+                       enabledBorder: InputBorder.none,
+                       errorBorder: InputBorder.none,
+                       disabledBorder: InputBorder.none,
+                       hintText: "Enter Note" 
+                       ),
+                       onChanged: (String nt){
+                        note = nt;
+                        print("Note: $note");
+                       },
+                   ),
+                 ),
+
+                 Container(
+                   padding: EdgeInsets.all(10.0),
+                   margin: EdgeInsets.fromLTRB(0, 60, 0, 30),
+                   width: 200,
+                   height: 80,
+                   child: RaisedButton(
+                     color: Colors.orange,
+                     child: Text("SUBMIT", style: TextStyle(
+                       color: Colors.white,
+                       fontWeight: FontWeight.bold,
+                       fontSize: 20.0), 
+                       ),
+                     onPressed: () {
+                       print("SAVE");
+                       if(_formKey.currentState.validate())
+                                {
+                                  showAlertDialog(context);
+                                }
+                     },
+                   ),
+                 ),
+              ]
+            ),
+            ),
+        ),
+        )
+    
+    );
+  }
+}
+
+void showAlertDialog(BuildContext context) 
+{  // set up the buttons
+  Widget cancelButton = FlatButton(
+    child: Text("Cancel"),
+    onPressed:  () {
+      Navigator.of(context).pop();
+    },
+  );
+  Widget continueButton = FlatButton(
+    child: Text("Save"),
+    onPressed:  () {
+      Navigator.of(context).pop();
+    },
+  );  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("CONFIRMATION"),
+    content: Text("Would you like to save your transactions details?"),
+    actions: [
+      cancelButton,
+      continueButton,
+    ],
+  );  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}

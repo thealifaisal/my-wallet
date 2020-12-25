@@ -1,0 +1,189 @@
+import 'package:flutter/material.dart';
+import 'package:date_format/date_format.dart';
+import 'package:intl/intl.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
+
+void main() {
+  runApp(Demo());
+}
+
+class Demo extends StatelessWidget {
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: myDemo(),
+    );
+  }
+}
+
+class myDemo extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() => MD();
+}
+
+class MD extends State<myDemo>{
+  double balance = 50740.00;
+
+  List<charts.Series<Task,String>> barData;
+  _generateData()
+  {
+    var data1 = [
+      new Task("Income","Oct",2000,Colors.orange),
+      new Task("Income","Nov",1500,Colors.orange)
+    ];
+    var data2 = [
+      new Task("Expense","Nov",3000,Colors.blue),
+      new Task("Expense","Oct",2500,Colors.blue)
+    ];
+
+    barData.add(
+      charts.Series(
+        domainFn: (Task task, _) => task.month,
+        measureFn: (Task task, _) => task.amount,
+        id: "Income",
+        colorFn: (Task task, _) => charts.ColorUtil.fromDartColor(task.colval),
+        data: data1,
+      )
+    );
+
+    barData.add(
+      charts.Series(
+        domainFn: (Task task, _) => task.month,
+        measureFn: (Task task, _) => task.amount,
+        id: "Expense",
+        colorFn: (Task task, _) => charts.ColorUtil.fromDartColor(task.colval),
+        data: data2,
+      )
+    );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    barData = List<charts.Series<Task,String>>();
+    _generateData();
+  }
+
+  @override
+  
+
+  @override
+  Widget build(BuildContext context) {
+    return (
+    new Scaffold(
+      appBar: AppBar(
+        title: Text("MyWallet"),
+        backgroundColor: Colors.orange,
+        actions: <Widget>[
+          Container(
+            padding: EdgeInsets.all(10.0),
+            margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            child: Text(
+              "Nov 2020",style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18.0
+              ),
+            ),
+          ),
+          IconButton(
+            icon: Icon(Icons.calendar_today),
+            color: Colors.white, 
+            onPressed: null
+            ),
+            IconButton(
+            icon: Icon(Icons.person_outline_rounded ),
+            color: Colors.white, 
+            onPressed: null
+            )
+        ],
+      ),
+      body: ListView(
+        padding: EdgeInsets.all(10.0),
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 14, 0, 0),
+            child: Text(
+              "Balance",style: TextStyle(
+                fontSize: 30, fontWeight: FontWeight.bold
+              ),
+            ),
+          ),
+
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 14, 0, 20),
+            child: Text(
+              "Rs. \t$balance",style: TextStyle(
+                fontSize: 30, color: Colors.orange
+              ),
+            ),
+          ),
+
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 40, 0, 10),
+            child: Text(
+              "Income & Expense",style: TextStyle(
+                fontSize: 30, fontWeight: FontWeight.bold
+              ),
+            ),
+          ),
+
+          Container(
+            margin: EdgeInsets.fromLTRB(10, 10, 0, 30),
+            child: Row(
+              children: <Widget>[
+                Container(
+                  height: 10,
+                  width: 10,
+                  color: Colors.orange,
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                   child: Text("Income"),
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                  height: 10,
+                  width: 10,
+                  color: Colors.blue,
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                   child: Text("Expense"),
+                )
+              ]
+            ),
+          ),
+
+          Container(
+            height: 300,
+            child: Expanded(
+                child: charts.BarChart(
+                  barData,
+                  animate: true,
+                  barGroupingType: charts.BarGroupingType.grouped,
+                  animationDuration: Duration(seconds: 3),
+                ),
+              ),
+            )
+          
+        ],
+
+      )
+      
+    )
+  );
+      
+  }
+}
+
+class Task {
+  String month;
+  String inexp;
+  int amount;
+  Color colval;
+
+  Task(this.inexp,this.month,this.amount,this.colval);
+}
